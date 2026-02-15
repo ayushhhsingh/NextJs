@@ -36,8 +36,8 @@ export default function SignupPage() {
         throw new Error(data.message || "Signup failed");
       }
 
-      // Redirect to verify page with email and code (for development)
-      router.push(`/verify?email=${encodeURIComponent(formData.email)}&code=${data.verifyCode}`);
+      // Redirect to verify page with email
+      router.push(`/verify?email=${encodeURIComponent(formData.email)}`);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong");
     } finally {
