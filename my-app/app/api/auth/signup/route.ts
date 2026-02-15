@@ -3,6 +3,7 @@ import dbconnect from "@/lib/dbconnect";
 import UserModel from "@/models/User";
 import { hashPassword, generateVerifyCode, getVerifyCodeExpiry } from "@/lib/auth";
 import { signupValidation } from "@/schemas/signupschema";
+import { sendVerificationEmail } from "@/lib/mailer";
 
 export async function POST(request: NextRequest) {
   await dbconnect();
@@ -71,13 +72,25 @@ export async function POST(request: NextRequest) {
       await newUser.save();
     }
 
-    // In production, send verification email here
-    // For now, we'll return the code (remove in production!)
+    // Send verification email
+    const emailResult = await sendVerificationEmail(email, verifyCode);
+    
+    if (!emailResult.success) {
+      console.error("Failed to send verification email:", emailResult.error);
+      // Still allow registration but warn about email
+      return NextResponse.json(
+        {
+          success: true,
+          message: "User registered. Verification email could not be sent. Please contact support.",
+        },
+        { status: 201 }
+      );
+    }
+
     return NextResponse.json(
       {
         success: true,
-        message: "User registered successfully. Please verify your email.",
-        verifyCode: verifyCode, // Remove this in production!
+        message: "User registered successfully. Please check your email for the verification code.",
       },
       { status: 201 }
     );
