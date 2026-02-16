@@ -8,9 +8,8 @@ export default function VerifyPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const email = searchParams.get("email") || "";
-  const codeFromUrl = searchParams.get("code") || "";
   
-  const [code, setCode] = useState(codeFromUrl);
+  const [code, setCode] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
@@ -57,14 +56,12 @@ export default function VerifyPage() {
             Verify Email
           </h1>
           <p className="mt-2 text-zinc-600 dark:text-zinc-400">
-            Enter the verification code for
+            Enter the verification code sent to
           </p>
           <p className="text-blue-600 font-medium">{email}</p>
-          {codeFromUrl && (
-            <p className="mt-2 text-sm text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20 px-4 py-2 rounded-lg">
-              Dev Mode: Your code is <span className="font-bold">{codeFromUrl}</span>
-            </p>
-          )}
+          <p className="mt-2 text-sm text-zinc-500 dark:text-zinc-400">
+            Check your inbox for the 6-digit code
+          </p>
         </div>
 
         <form onSubmit={handleSubmit} className="mt-8 space-y-6">
